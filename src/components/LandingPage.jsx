@@ -1,5 +1,10 @@
-import { useState } from 'react'
-import ReactGA from 'react-ga4'
+import { useState, useRef, useEffect } from 'react'
+import {
+  trackCTAClick,
+  trackFormStart,
+  trackFormSubmit,
+  trackThankYouView,
+} from '../utils/ga'
 import './LandingPage.css'
 
 /**
@@ -17,79 +22,143 @@ import './LandingPage.css'
  * - CTA effectiveness (cta_click / page_view)
  */
 function LandingPage() {
-  // Form state management
+  // Form state
   const [formData, setFormData] = useState({
     name: '',
     email: ''
   })
   
-  // Track if form has been submitted
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  
-  // Track if form is visible (used to show/hide form after CTA click)
+  // UI state
   const [showForm, setShowForm] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showStickyCTA, setShowStickyCTA] = useState(false)
+  const [errors, setErrors] = useState({})
+  
+  // Track if form_start has been fired (session-safe)
+  const formStartTracked = useRef(false)
 
   /**
    * Handle CTA button click
-   * This is the first conversion point in the funnel
+   * Tracks intent and reveals the form
    */
   const handleCTAClick = () => {
-    // Track CTA click event in GA4
-    // This helps measure user engagement and intent
-    ReactGA.event({
-      category: 'engagement',
-      action: 'cta_click',
-      label: 'get_early_access_button',
-    })
+    // Track GA4 event
+    trackCTAClick('get_early_access')
     
-    // Show the form
+    // Show form
     setShowForm(true)
     
     // Smooth scroll to form
     setTimeout(() => {
       document.getElementById('lead-form')?.scrollIntoView({ 
-        behavior: 'smooth' 
+        behavior: 'smooth',
+        block: 'start'
       })
     }, 100)
   }
 
   /**
-   * Handle form input changes
+   * Handle first input focus
+   * Fires form_start event once per session
+   */
+  const handleFormStart = () => {
+    if (!formStartTracked.current) {
+      trackFormStart()
+      formStartTracked.current = true
+    }
+  }
+
+  /**
+   * Handle form input changes with validation
    */
   const handleInputChange = (e) => {
     const { name, value } = e.target
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
+    }
+  }
+
+  /**
+   * Validate form fields
+   */
+  const validateForm = () => {
+    const newErrors = {}
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required'
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
   }
 
   /**
    * Handle form submission
-   * This is the final conversion point in the funnel
+   * Validates, tracks, and shows success state
    */
   const handleSubmit = (e) => {
-    e.preventDefault() // Prevent page reload
+    e.preventDefault()
     
-    // Track form submission event in GA4
-    // This is the key conversion metric for the funnel
-    ReactGA.event({
-      category: 'conversion',
-      action: 'form_submit',
-      label: 'lead_generation_form',
-    })
+    // Validate
+    if (!validateForm()) {
+      return
+    }
     
-    // In a real application, you would:
-    // 1. Send data to your backend/CRM
-    // 2. Store in database
-    // 3. Trigger email automation
-    // For this demo, we just show the thank you message
+    // Show loading state
+    setIsSubmitting(true)
     
-    setIsSubmitted(true)
-    
-    // Clear form data (optional, for security)
-    setFormData({ name: '', email: '' })
+    // Simulate API call
+    setTimeout(() => {
+      // Track conversion
+      trackFormSubmit(!!formData.name, !!formData.email)
+      
+      // Update UI
+      setIsSubmitting(false)
+      setIsSubmitted(true)
+      
+      // Clear form data
+      setFormData({ name: '', email: '' })
+    }, 800)
   }
+
+  /**
+   * Track thank_you_view when success message appears
+   */
+  useEffect(() => {
+    if (isSubmitted) {
+      trackThankYouView()
+    }
+  }, [isSubmitted])
+
+  /**
+   * Show sticky CTA after 40% scroll
+   */
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
+      setShowStickyCTA(scrollPercent > 40 && !showForm && !isSubmitted)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [showForm, isSubmitted])
 
   return (
     <div className="landing-page">
@@ -106,12 +175,24 @@ function LandingPage() {
             <button 
               className="cta-button" 
               onClick={handleCTAClick}
+              aria-label="Get early access to our platform"
             >
               Get Early Access
             </button>
           )}
         </div>
       </header>
+
+      {/* Sticky CTA (shows after 40% scroll) */}
+      {showStickyCTA && (
+        <button 
+          className="sticky-cta"
+          onClick={handleCTAClick}
+          aria-label="Get early access"
+        >
+          Get Early Access
+        </button>
+      )}
 
       {/* Form Section */}
       {showForm && !isSubmitted && (
@@ -124,33 +205,62 @@ function LandingPage() {
             
             <form className="lead-form" onSubmit={handleSubmit}>
               <div className="form-group">
-                <label htmlFor="name">Full Name</label>
+                <label htmlFor="name">Full Name *</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
+                  onFocus={handleFormStart}
                   placeholder="John Doe"
-                  required
+                  disabled={isSubmitting}
+                  className={errors.name ? 'error' : ''}
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? 'name-error' : undefined}
                 />
+                {errors.name && (
+                  <span className="error-message" id="name-error" role="alert">
+                    {errors.name}
+                  </span>
+                )}
               </div>
               
               <div className="form-group">
-                <label htmlFor="email">Email Address</label>
+                <label htmlFor="email">Email Address *</label>
                 <input
                   type="email"
                   id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
+                  onFocus={handleFormStart}
                   placeholder="john@example.com"
-                  required
+                  disabled={isSubmitting}
+                  className={errors.email ? 'error' : ''}
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? 'email-error' : undefined}
                 />
+                {errors.email && (
+                  <span className="error-message" id="email-error" role="alert">
+                    {errors.email}
+                  </span>
+                )}
               </div>
               
-              <button type="submit" className="submit-button">
-                Submit
+              <button 
+                type="submit" 
+                className="submit-button"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span className="spinner"></span>
+                    Submitting...
+                  </>
+                ) : (
+                  'Submit'
+                )}
               </button>
             </form>
           </div>
@@ -162,7 +272,8 @@ function LandingPage() {
         <section className="thank-you-section">
           <div className="container">
             <div className="success-message">
-              <h2>🎉 Thank You!</h2>
+              <div className="success-icon">🎉</div>
+              <h2>Thank You!</h2>
               <p>
                 We've received your information and will send you early access details shortly.
               </p>
