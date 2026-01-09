@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { trackEvent } from '../ga'
+import ReactGA from 'react-ga4'
 import './LandingPage.css'
 
 /**
@@ -36,10 +36,10 @@ function LandingPage() {
   const handleCTAClick = () => {
     // Track CTA click event in GA4
     // This helps measure user engagement and intent
-    trackEvent('cta_click', {
-      event_category: 'engagement',
-      event_label: 'get_early_access_button',
-      button_text: 'Get Early Access'
+    ReactGA.event({
+      category: 'engagement',
+      action: 'cta_click',
+      label: 'get_early_access_button',
     })
     
     // Show the form
@@ -73,14 +73,10 @@ function LandingPage() {
     
     // Track form submission event in GA4
     // This is the key conversion metric for the funnel
-    trackEvent('form_submit', {
-      event_category: 'conversion',
-      event_label: 'lead_generation_form',
-      form_name: 'early_access_form',
-      // Note: Never send PII (Personally Identifiable Information) to GA
-      // We only send metadata about the submission
-      has_name: !!formData.name,
-      has_email: !!formData.email
+    ReactGA.event({
+      category: 'conversion',
+      action: 'form_submit',
+      label: 'lead_generation_form',
     })
     
     // In a real application, you would:
