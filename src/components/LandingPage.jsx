@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { trackEvent } from '../analytics/ga4'
+import { trackEvent } from '../ga'
 import './LandingPage.css'
 
 /**
