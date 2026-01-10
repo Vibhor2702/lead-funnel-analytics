@@ -1,17 +1,23 @@
+import { Routes, Route } from 'react-router-dom'
 import LandingPage from './components/LandingPage'
+import Blog from './components/Blog'
 import './App.css'
 
 /**
  * App Component
  * 
- * Root component of the application.
- * GA4 is initialized in main.jsx before React renders,
- * so we don't need to initialize it here.
+ * Root component with routing setup.
+ * Routes:
+ * - / (Home): Landing page with lead form
+ * - /blog: Blog content page
  */
 function App() {
   return (
     <div className="App">
-      <LandingPage />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/blog" element={<Blog />} />
+      </Routes>
     </div>
   )
 }

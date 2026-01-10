@@ -1,0 +1,250 @@
+/* Blog Page Styles */
+
+.blog-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+}
+
+/* Navigation */
+.blog-nav {
+  background-color: white;
+  padding: 20px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.back-link {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 16px;
+  transition: all 0.2s ease;
+  border-radius: 6px;
+}
+
+.back-link:hover {
+  background-color: #f0f0ff;
+  transform: translateX(-3px);
+}
+
+/* Blog Article */
+.blog-article {
+  flex: 1;
+  padding: 60px 20px;
+}
+
+.blog-article .container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Blog Header */
+.blog-header {
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+.blog-title {
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.blog-meta {
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Blog Content */
+.blog-content {
+  background-color: white;
+  padding: 48px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 48px;
+  line-height: 1.8;
+}
+
+/* Content Typography */
+.blog-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-top: 48px;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.blog-content h2:first-child {
+  margin-top: 0;
+}
+
+.blog-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 36px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.blog-content p {
+  font-size: 1.125rem;
+  color: #444;
+  margin-bottom: 24px;
+}
+
+.blog-content ul,
+.blog-content ol {
+  margin-left: 24px;
+  margin-bottom: 24px;
+}
+
+.blog-content li {
+  font-size: 1.125rem;
+  color: #444;
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
+
+.blog-content strong {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.blog-content em {
+  font-style: italic;
+}
+
+.blog-content blockquote {
+  border-left: 4px solid #667eea;
+  padding-left: 24px;
+  margin: 32px 0;
+  font-style: italic;
+  color: #555;
+  font-size: 1.25rem;
+}
+
+/* Placeholder Styling */
+.content-placeholder {
+  background-color: #fff9e6;
+  border: 2px dashed #ffb84d;
+  padding: 32px;
+  border-radius: 8px;
+  text-align: center;
+  color: #996600;
+}
+
+/* Blog CTA */
+.blog-cta {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 48px;
+  text-align: center;
+  color: white;
+}
+
+.blog-cta-content h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.blog-cta-content p {
+  font-size: 1.125rem;
+  opacity: 0.95;
+  margin-bottom: 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.blog-cta-button {
+  background-color: white;
+  color: #667eea;
+  font-size: 1.125rem;
+  font-weight: 600;
+  padding: 16px 40px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.blog-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  background-color: #f0f0f0;
+}
+
+/* Footer */
+.blog-footer {
+  background-color: #333;
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.blog-footer p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .blog-title {
+    font-size: 2rem;
+  }
+
+  .blog-content {
+    padding: 32px 24px;
+  }
+
+  .blog-content h2 {
+    font-size: 1.75rem;
+  }
+
+  .blog-content h3 {
+    font-size: 1.35rem;
+  }
+
+  .blog-content p,
+  .blog-content li {
+    font-size: 1rem;
+  }
+
+  .blog-cta {
+    padding: 32px 24px;
+  }
+
+  .blog-cta-content h3 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-article {
+    padding: 40px 16px;
+  }
+
+  .blog-title {
+    font-size: 1.75rem;
+  }
+
+  .blog-content {
+    padding: 24px 20px;
+  }
+}

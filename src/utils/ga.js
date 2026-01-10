@@ -121,3 +121,21 @@ export const trackThankYouView = () => {
     conversion_status: 'success',
   })
 }
+
+/**
+ * Blog Event Tracking
+ */
+
+export const trackBlogView = () => {
+  trackEvent('blog_view', {
+    content_type: 'blog_post',
+    page_type: 'content',
+  })
+}
+
+export const trackBlogCTAClick = () => {
+  trackEvent('blog_cta_click', {
+    funnel_stage: 'intent',
+    cta_location: 'blog_bottom',
+  })
+}

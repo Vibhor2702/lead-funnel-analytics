@@ -39,6 +39,14 @@
 }
 
 /* CTA Button */
+.hero-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .cta-button {
   background-color: #fff;
   color: #667eea;
@@ -60,6 +68,25 @@
 
 .cta-button:active {
   transform: translateY(0);
+}
+
+/* Blog Link Button */
+.blog-link-button {
+  background-color: transparent;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 500;
+  padding: 18px 36px;
+  border: 2px solid white;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.blog-link-button:hover {
+  background-color: white;
+  color: #667eea;
+  transform: translateY(-2px);
 }
 
 /* Form Section */

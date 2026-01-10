@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   trackCTAClick,
   trackFormStart,
@@ -22,6 +23,8 @@ import './LandingPage.css'
  * - CTA effectiveness (cta_click / page_view)
  */
 function LandingPage() {
+  const navigate = useNavigate()
+  
   // Form state
   const [formData, setFormData] = useState({
     name: '',
@@ -172,13 +175,23 @@ function LandingPage() {
           </p>
           
           {!showForm && !isSubmitted && (
-            <button 
-              className="cta-button" 
-              onClick={handleCTAClick}
-              aria-label="Get early access to our platform"
-            >
-              Get Early Access
-            </button>
+            <div className="hero-actions">
+              <button 
+                className="cta-button" 
+                onClick={handleCTAClick}
+                aria-label="Get early access to our platform"
+              >
+                Get Early Access
+              </button>
+              
+              <button 
+                className="blog-link-button"
+                onClick={() => navigate('/blog')}
+                aria-label="Read our blog"
+              >
+                Read the Blog →
+              </button>
+            </div>
           )}
         </div>
       </header>
