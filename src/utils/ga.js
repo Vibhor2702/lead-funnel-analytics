@@ -3,7 +3,10 @@
  * 
  * Centralized helper for GA4 event tracking using gtag.js
  * Uses lowercase snake_case naming and GA4-recommended parameters
+ * Automatically includes UTM attribution data in all events
  */
+
+import { getAttributionData } from './utm'
 
 /**
  * Initialize Google Analytics 4
@@ -55,6 +58,7 @@ export const initGA = () => {
 
 /**
  * Track custom GA4 events with standardized parameters
+ * Automatically includes UTM attribution data for campaign tracking
  * 
  * @param {string} eventName - Event name in lowercase snake_case
  * @param {Object} params - Custom event parameters
@@ -66,9 +70,13 @@ export const trackEvent = (eventName, params = {}) => {
   }
 
   try {
-    // Always include page_location for context
+    // Get UTM attribution data
+    const attribution = getAttributionData();
+    
+    // Always include page_location and attribution data
     const eventParams = {
       page_location: window.location.href,
+      ...attribution,
       ...params,
     }
 

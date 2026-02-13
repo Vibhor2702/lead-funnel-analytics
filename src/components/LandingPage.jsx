@@ -6,6 +6,7 @@ import {
   trackFormSubmit,
   trackThankYouView,
 } from '../utils/ga'
+import { getStoredUTMParams } from '../utils/utm'
 import ExitIntentPopup from './ExitIntentPopup'
 import './LandingPage.css'
 
@@ -294,6 +295,16 @@ function LandingPage() {
               <p className="secondary-text">
                 Check your email inbox for next steps.
               </p>
+              {import.meta.env.DEV && (() => {
+                const utms = getStoredUTMParams();
+                return utms ? (
+                  <div style={{ marginTop: '20px', padding: '12px', background: '#f0f9ff', borderRadius: '8px', fontSize: '13px', color: '#0369a1' }}>
+                    <strong>📍 Attribution (DEV only):</strong><br/>
+                    Source: {utms.utm_source || 'direct'} | Medium: {utms.utm_medium || 'none'}
+                    {utms.utm_campaign && ` | Campaign: ${utms.utm_campaign}`}
+                  </div>
+                ) : null;
+              })()}
             </div>
           </div>
         </section>
