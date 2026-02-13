@@ -139,3 +139,30 @@ export const trackBlogCTAClick = () => {
     cta_location: 'blog_bottom',
   })
 }
+
+/**
+ * Exit Intent Popup Event Tracking
+ * CRO strategy: Track popup performance for conversion optimization
+ */
+
+export const trackPopupView = () => {
+  trackEvent('popup_view', {
+    popup_type: 'exit_intent',
+    funnel_stage: 'retention',
+  })
+}
+
+export const trackPopupDismiss = (action = 'close_button') => {
+  trackEvent('popup_dismiss', {
+    popup_type: 'exit_intent',
+    action: action,
+  })
+}
+
+export const trackPopupConversion = () => {
+  trackEvent('popup_conversion', {
+    popup_type: 'exit_intent',
+    funnel_stage: 'conversion',
+    has_email_field: true,
+  })
+}

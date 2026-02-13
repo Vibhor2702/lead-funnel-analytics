@@ -6,6 +6,7 @@ import {
   trackFormSubmit,
   trackThankYouView,
 } from '../utils/ga'
+import ExitIntentPopup from './ExitIntentPopup'
 import './LandingPage.css'
 
 /**
@@ -304,6 +305,16 @@ function LandingPage() {
           <p>© 2026 Lead Funnel Analytics. Built for digital marketing excellence.</p>
         </div>
       </footer>
+
+      {/* Exit Intent Popup - CRO Strategy */}
+      <ExitIntentPopup 
+        onConvert={(email) => {
+          console.log('Exit popup conversion:', email)
+        }}
+        onClose={() => {
+          console.log('Exit popup dismissed')
+        }}
+      />
     </div>
   )
 }
