@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
+  trackPageView,
   trackCTAClick,
   trackFormStart,
   trackFormSubmit,
@@ -42,6 +43,13 @@ function LandingPage() {
   
   // Track if form_start has been fired (session-safe)
   const formStartTracked = useRef(false)
+
+  /**
+   * Track page view on mount
+   */
+  useEffect(() => {
+    trackPageView('/', 'Landing Page')
+  }, [])
 
   /**
    * Handle CTA button click

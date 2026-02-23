@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom'
-import { trackBlogView, trackBlogCTAClick } from '../utils/ga'
+import { trackPageView, trackBlogView, trackBlogCTAClick } from '../utils/ga'
 import './Blog.css'
 
 /**
@@ -21,6 +21,7 @@ function Blog() {
 
   // Track blog view on component mount
   useEffect(() => {
+    trackPageView('/blog', 'Blog - Why Lead Funnels Matter')
     trackBlogView()
   }, [])
 

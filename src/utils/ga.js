@@ -43,11 +43,10 @@ export const initGA = () => {
     window.gtag('js', new Date())
     window.gtag('config', measurementId, {
       send_page_view: true,
+      debug_mode: true, // Enable debug mode to see events in GA4 DebugView
     })
 
-    if (import.meta.env.DEV) {
-      console.log('✅ GA4 initialized:', measurementId)
-    }
+    console.log('✅ GA4 initialized:', measurementId)
 
     return true
   } catch (error) {
@@ -90,6 +89,34 @@ export const trackEvent = (eventName, params = {}) => {
     return true
   } catch (error) {
     console.error('❌ GA4 event failed:', error)
+    return false
+  }
+}
+
+/**
+ * Track page view manually
+ * Useful for SPAs where automatic page view tracking may not work
+ */
+export const trackPageView = (pagePath, pageTitle) => {
+  if (typeof window.gtag !== 'function') {
+    console.warn('⚠️ GA4: gtag not initialized')
+    return false
+  }
+
+  try {
+    const attribution = getAttributionData()
+    
+    window.gtag('event', 'page_view', {
+      page_path: pagePath || window.location.pathname,
+      page_title: pageTitle || document.title,
+      page_location: window.location.href,
+      ...attribution,
+    })
+
+    console.log('📊 GA4 Page View:', pagePath || window.location.pathname)
+    return true
+  } catch (error) {
+    console.error('❌ GA4 page view failed:', error)
     return false
   }
 }
